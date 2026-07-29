@@ -1,185 +1,81 @@
 "use client";
+
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Tooltip from "@mui/material/Tooltip";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
-import { useAppDispatch, useAppSelector } from "@/app/store";
+import Toolbar from "@mui/material/Toolbar";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/app/store";
 import { logout } from "@/features/auth/auth.action";
+import styles from "./app-bar.module.css";
+import { FolderRounded } from "@mui/icons-material";
 
-// const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Logout"];
-
-function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+export default function ResponsiveAppBar() {
+  const [anchorElUser, setAnchorElUser] = React.useState<HTMLElement | null>(
     null,
   );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null,
-  );
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
   const dispatch = useAppDispatch();
   const router = useRouter();
-
-  const handleCloseUserMenu = async (e: string) => {
-    if (e === "Logout") {
-      const thunk = await dispatch(logout(null));
-      if (thunk.meta.requestStatus === "fulfilled") {
-        router.replace("/login");
-      }
-    }
-    if (e === "Profile") {
-      router.push("/profile");
-    }
-    setAnchorElUser(null);
-  };
   const { user } = useAppSelector((state) => state.auth);
-  if (!user) return;
+
+  async function handleMenuAction(action: "profile" | "logout") {
+    if (action === "logout") {
+      const result = await dispatch(logout(null));
+      if (result.meta.requestStatus === "fulfilled") router.replace("/login");
+    }
+    if (action === "profile") router.push("/profile");
+    setAnchorElUser(null);
+  }
+
+  if (!user) return null;
 
   return (
-    <AppBar position="static" suppressHydrationWarning>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+    <AppBar position="static" elevation={0} className={styles.appBar}>
+      <Toolbar className={styles.toolbar}>
+        <Box className={styles.brand}>
+          <FolderRounded className={styles.brandIcon} />
           <Typography
+            component="span"
             variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
+            className={styles.brandName}
           >
             Drive
           </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+        </Box>
+        <Box className={styles.userArea}>
+          <Box className={styles.userCopy}>
+            <Typography className={styles.userName}>{user.name}</Typography>
+          </Box>
+          <Tooltip title="Account settings">
             <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
+              onClick={(event) => setAnchorElUser(event.currentTarget)}
+              aria-label="Open account menu"
             >
-              <MenuIcon />
+              <Avatar alt={user.name} src={user.avatar || ""}>
+                {user.name.charAt(0).toUpperCase()}
+              </Avatar>
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: "block", md: "none" } }}
-            >
-              {/* {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>{page}</Typography>
-                </MenuItem>
-              ))} */}
-            </Menu>
-          </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
+          </Tooltip>
+          <Menu
+            anchorEl={anchorElUser}
+            open={Boolean(anchorElUser)}
+            onClose={() => setAnchorElUser(null)}
           >
-            LOGO
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {/* {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))} */}
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={user.name} src={user.avatar || ""} />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={() => handleCloseUserMenu(setting)}
-                >
-                  <Typography sx={{ textAlign: "center" }}>
-                    {setting}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
+            <MenuItem onClick={() => handleMenuAction("profile")}>
+              Profile
+            </MenuItem>
+            <MenuItem onClick={() => handleMenuAction("logout")}>
+              Log out
+            </MenuItem>
+          </Menu>
+        </Box>
+      </Toolbar>
     </AppBar>
   );
 }
-export default ResponsiveAppBar;

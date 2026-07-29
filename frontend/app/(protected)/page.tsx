@@ -1,8 +1,10 @@
+import FileDashboard from "@/features/files/file-dashboard";
+import type { FileListResponse } from "@/features/files/file.types";
 import { serverApi } from "@/lib/server.api";
-import { Box } from "@mui/material";
 
 export default async function Page() {
   const api = await serverApi();
-  const { data } = await api.get("/files");
-  return <Box>Simple page</Box>;
+  const response = await api.get<FileListResponse>("/files");
+
+  return <FileDashboard initialData={response.data ?? null} />;
 }

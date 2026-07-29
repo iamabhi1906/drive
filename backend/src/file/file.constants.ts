@@ -1,7 +1,7 @@
 export const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
 
 export const DEFAULT_PAGE = 1;
-export const DEFAULT_PAGE_SIZE = 20;
+export const DEFAULT_PAGE_SIZE = 12;
 export const MAX_PAGE_SIZE = 100;
 
 export const STORAGE_DIRECTORY = 'public/uploads';

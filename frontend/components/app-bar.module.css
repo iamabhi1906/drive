@@ -1,0 +1,50 @@
+.appBar {
+  background: #ffffff;
+  border-bottom: 1px solid #e6e9f0;
+  color: #1e2432;
+}
+.toolbar {
+  width: min(1180px, calc(100% - 48px));
+  min-height: 68px;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+}
+.brand,
+.userArea {
+  display: flex;
+  align-items: center;
+}
+.brand {
+  gap: 9px;
+}
+.brandIcon {
+  color: #5d64e6;
+}
+.brandName {
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+.userArea {
+  gap: 10px;
+}
+.userCopy {
+  text-align: right;
+}
+.userName {
+  font-size: 14px;
+  font-weight: 600;
+}
+.userLabel {
+  color: #707789;
+  font-size: 12px;
+}
+@media (max-width: 700px) {
+  .toolbar {
+    width: min(100% - 28px, 1180px);
+  }
+  .userCopy {
+    display: none;
+  }
+}

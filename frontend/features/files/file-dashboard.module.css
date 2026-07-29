@@ -1,0 +1,210 @@
+.dashboard {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 40px 0 64px;
+}
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.title {
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+.subtitle {
+  margin-top: 6px;
+}
+.uploadButton {
+  min-height: 42px;
+  text-transform: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.filterBar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #e6e9f0;
+  background: #fff;
+}
+.searchField {
+  flex: 1;
+}
+.filterSelect {
+  width: 170px;
+}
+.checkIcon {
+  min-width: 25px;
+  color: #5d64e6;
+}
+.clearButton {
+  min-width: max-content;
+  text-transform: none;
+}
+.fileGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.fileCard {
+  display: flex;
+  min-height: 194px;
+  padding: 16px;
+  flex-direction: column;
+  border: 1px solid #e6e9f0;
+  background: #fff;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+.fileCard:hover {
+  border-color: #bcc2f8;
+  box-shadow: 0 8px 24px rgba(67, 78, 156, 0.1);
+}
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.cardActions {
+  display: flex;
+  margin: -7px -7px 0 0;
+}
+.mimeIcon {
+  font-size: 40px;
+}
+.mimeImage {
+  color: #9b51e0;
+}
+.mimePdf {
+  color: #dd4c52;
+}
+.mimeSpreadsheet {
+  color: #1d9c65;
+}
+.mimePresentation {
+  color: #e7743c;
+}
+.mimeArchive {
+  color: #b88322;
+}
+.mimeText {
+  color: #4c82cf;
+}
+.mimeDocument,
+.mimeOther {
+  color: #5e6ce5;
+}
+.cardName {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cardInfo {
+  margin-top: 5px;
+  font-size: 12px;
+}
+.cardTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  min-height: 24px;
+  margin-top: auto;
+  padding-top: 13px;
+}
+.cardTags :global(.MuiChip-root) {
+  background: #f0f2ff;
+  color: #535bbd;
+}
+.loadingState {
+  display: flex;
+  min-height: 250px;
+  align-items: center;
+  justify-content: center;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+.emptyState {
+  display: flex;
+  min-height: 300px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  padding: 32px;
+  text-align: center;
+}
+.emptyIcon {
+  color: #a4abbd;
+  font-size: 42px;
+}
+.hiddenInput {
+  display: none;
+}
+.dialogContent {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 420px;
+}
+.filePicker {
+  justify-content: flex-start;
+  min-height: 50px;
+  overflow: hidden;
+  text-align: left;
+  text-transform: none;
+}
+@media (max-width: 1000px) {
+  .fileGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  .dashboard {
+    width: min(100% - 28px, 1180px);
+    padding-top: 24px;
+  }
+  .pageHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .uploadButton {
+    width: 100%;
+  }
+  .filterBar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .filterSelect {
+    width: 100%;
+  }
+  .clearButton {
+    align-self: flex-start;
+  }
+  .fileGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .fileCard {
+    min-height: 170px;
+    padding: 13px;
+  }
+  .dialogContent {
+    min-width: 0;
+  }
+}
+@media (max-width: 420px) {
+  .fileGrid {
+    grid-template-columns: 1fr;
+  }
+}
