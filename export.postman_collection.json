@@ -1,0 +1,119 @@
+{
+  "info": {
+    "_postman_id": "72173aa4-9beb-42c5-ba92-70efb46fe805",
+    "name": "export",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56756754",
+    "_collection_link": "https://iamabhi1906-9859544.postman.co/workspace/Abhishek-Kumar's-Workspace~77628626-71a1-4cd4-8180-a9d04dfcc6bf/collection/56756754-72173aa4-9beb-42c5-ba92-70efb46fe805?action=share&source=collection_link&creator=56756754"
+  },
+  "item": [
+    {
+      "name": "Files",
+      "item": [
+        {
+          "name": "Upload a file",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/home/abhishek/Downloads/blocked.webp"
+                },
+                {
+                  "key": "tagIds",
+                  "value": "[]",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url}}/files",
+              "host": ["{{url}}"],
+              "path": ["files"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get my Files",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/files",
+              "host": ["{{url}}"],
+              "path": ["files"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get file by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/files/:id",
+              "host": ["{{url}}"],
+              "path": ["files", ":id"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": null,
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete a file",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url}}/files/:id",
+              "host": ["{{url}}"],
+              "path": ["files", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

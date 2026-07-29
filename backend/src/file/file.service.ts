@@ -1,0 +1,115 @@
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, Repository } from 'typeorm';
+import { UsersService } from '../users/users.service';
+import { ALLOWED_MIME_TYPES } from './file.constants';
+import { ListFilesDto } from './dto/list-files.dto';
+import { UploadFileDto } from './dto/upload-file.dto';
+import { File } from './entities/file.entity';
+import { StorageService } from './storage.service';
+import { Tag } from '../tags/entities/tag.entity';
+
+@Injectable()
+export class FileService {
+  constructor(
+    @InjectRepository(File)
+    private readonly fileRepository: Repository<File>,
+    @InjectRepository(Tag)
+    private readonly tagRepository: Repository<Tag>,
+    private readonly usersService: UsersService,
+    private readonly storageService: StorageService,
+  ) {}
+
+  async upload(
+    file: Express.Multer.File | undefined,
+    dto: UploadFileDto,
+    userId: string,
+  ): Promise<File> {
+    this.validateFile(file);
+    const [user, tags] = await Promise.all([
+      this.getAuthenticatedUser(userId),
+      this.findTags(dto.tagIds),
+    ]);
+    const storedFile = await this.storageService.saveFile(file);
+
+    try {
+      const newFile = this.fileRepository.create({
+        originalName: file.originalname,
+        storedName: storedFile.storedName,
+        mimeType: file.mimetype,
+        size: file.size,
+        storagePath: storedFile.storagePath,
+        user,
+        tags,
+      });
+      return await this.fileRepository.save(newFile);
+    } catch (error) {
+      await this.storageService.deleteFile(storedFile.storagePath);
+      throw error;
+    }
+  }
+
+  async findAll(userId: string, query: ListFilesDto) {
+    const { page, limit } = query;
+    const [files, total] = await this.fileRepository.findAndCount({
+      where: { user: { id: Number(userId) } },
+      relations: { tags: true },
+      order: { createdAt: 'DESC' },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return {
+      files,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async findOne(id: number, userId: string): Promise<File> {
+    const file = await this.fileRepository.findOne({
+      where: { id, user: { id: Number(userId) } },
+      relations: { tags: true },
+    });
+    if (!file) throw new NotFoundException('File not found');
+    return file;
+  }
+
+  async remove(id: number, userId: string): Promise<void> {
+    const file = await this.findOne(id, userId);
+    await this.storageService.deleteFile(file.storagePath);
+    await this.fileRepository.remove(file);
+  }
+
+  private validateFile(
+    file: Express.Multer.File | undefined,
+  ): asserts file is Express.Multer.File {
+    if (!file) throw new BadRequestException('File is required');
+    if (!ALLOWED_MIME_TYPES.includes(file.mimetype as never)) {
+      throw new BadRequestException('File type is not allowed');
+    }
+  }
+
+  private async getAuthenticatedUser(userId: string) {
+    const user = await this.usersService.findById(userId);
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+
+  private async findTags(tagIds: number[]): Promise<Tag[]> {
+    if (tagIds.length === 0) return [];
+    const tags = await this.tagRepository.findBy({ id: In(tagIds) });
+    if (tags.length !== tagIds.length) {
+      throw new BadRequestException('One or more tags do not exist');
+    }
+    return tags;
+  }
+}
