@@ -11,6 +11,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
+import { avatarUrl } from "@/lib/avatar";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { logout } from "@/features/auth/auth.action";
 import styles from "./app-bar.module.css";
@@ -57,7 +58,7 @@ export default function ResponsiveAppBar() {
               onClick={(event) => setAnchorElUser(event.currentTarget)}
               aria-label="Open account menu"
             >
-              <Avatar alt={user.name} src={user.avatar || ""}>
+              <Avatar alt={user.name} src={avatarUrl(user.avatar)}>
                 {user.name.charAt(0).toUpperCase()}
               </Avatar>
             </IconButton>

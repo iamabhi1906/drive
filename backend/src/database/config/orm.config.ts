@@ -11,7 +11,7 @@ export const ormConfig: TypeOrmModuleAsyncOptions = {
     username: config.get<string>('POSTGRES_USER'),
     password: config.get<string>('POSTGRES_PASSWORD'),
     database: config.get<string>('POSTGRES_DATABASE'),
-
+    ssl: true,
     entities: [join(__dirname, '..', '..', '**', '*.entity.{js,ts}')],
     migrations: [join(__dirname, '..', 'migrations', '*.{js,ts}')],
 

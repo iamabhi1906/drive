@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AuthUser, LoginInput } from "./auth.types";
+import { AuthUser, LoginInput, UpdateProfileInput } from "./auth.types";
 import api from "@/lib/api";
 import { SignupInput } from "./auth.types";
 import axios from "axios";
@@ -69,3 +69,47 @@ export const logout = createAsyncThunk<void, null, { rejectValue: string }>(
     }
   },
 );
+
+export const updateProfile = createAsyncThunk<
+  AuthUser,
+  UpdateProfileInput,
+  { rejectValue: string }
+>("auth/updateProfile", async (payload, { rejectWithValue }) => {
+  try {
+    const { data } = await api.patch("/users/me", payload);
+    return data as AuthUser;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message;
+      return rejectWithValue(
+        Array.isArray(message) ? message[0] : (message ?? error.message),
+      );
+    }
+    return rejectWithValue(
+      error instanceof Error ? error.message : "Unable to update your profile.",
+    );
+  }
+});
+
+export const uploadAvatar = createAsyncThunk<
+  AuthUser,
+  File,
+  { rejectValue: string }
+>("auth/uploadAvatar", async (avatar, { rejectWithValue }) => {
+  try {
+    const formData = new FormData();
+    formData.append("avatar", avatar);
+    const { data } = await api.post("/users/me/avatar", formData);
+    return data as AuthUser;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message;
+      return rejectWithValue(
+        Array.isArray(message) ? message[0] : (message ?? error.message),
+      );
+    }
+    return rejectWithValue(
+      error instanceof Error ? error.message : "Unable to upload your avatar.",
+    );
+  }
+});

@@ -4,6 +4,12 @@ export interface AuthUser {
   email: string;
   isVerified: boolean;
   avatar: string | null;
+  createdAt: string;
+}
+
+export interface UpdateProfileInput {
+  name: string;
+  avatar: string;
 }
 
 export interface LoginInput {

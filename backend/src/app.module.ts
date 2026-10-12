@@ -11,6 +11,8 @@ import { EmailVerificationModule } from './email-verification/email-verification
 import { MailModule } from './mail/mail.module';
 import { FileModule } from './file/file.module';
 import { TagsModule } from './tags/tags.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -18,10 +20,10 @@ import { TagsModule } from './tags/tags.module';
       isGlobal: true,
       validate: validateEnv,
     }),
-    // ServeStaticModule.forRoot({
-    //   rootPath: join(__dirname, '..', 'public'),
-    //   serveRoot: '/app',
-    // }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      serveRoot: '/app',
+    }),
     TypeOrmModule.forRootAsync(ormConfig),
     UsersModule,
     AuthModule,
